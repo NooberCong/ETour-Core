@@ -2,7 +2,7 @@
 
 namespace Core.Entities
 {
-    public class TourReview: AuthoredTrackedDeleteEntityWithKey<User, int>
+    public class TourReview: AuthoredTrackedDeleteEntityWithKey<Customer, int>
     {
         public string Content { get; set; }
         public int Stars { get; set; }

@@ -2,7 +2,7 @@
 
 namespace Core.Interfaces
 {
-    public interface IEmployee: IEntityWithKey<int>
+    public interface IEmployee: IEntityWithKey<string>
     {
         public string Name { get; set; }
         public string Email { get; set; }

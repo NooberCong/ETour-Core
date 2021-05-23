@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Core.Entities
 {
-    public class User : DeleteEntityWithKey<string>
+    public class Customer : DeleteEntityWithKey<string>
     {
         public string Name { get; set; }
         public string Email { get; set; }

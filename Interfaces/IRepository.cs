@@ -8,43 +8,43 @@ using System.Threading.Tasks;
 
 namespace Core.Interfaces
 {
-    public interface IFirstOrDefaultAsync<TEntity, TKey> where TEntity: IEntityWithKey<TKey>, new()
+    public interface IFindAsync<TEntity, TKey> where TEntity: IEntityWithKey<TKey>
     {
-        public Task<TEntity> FirstOrDefaultAsync(TKey key);
+        public Task<TEntity> FindAsync(TKey key);
     }
 
-    public interface IAdd<TEntity> where TEntity: class, new()
+    public interface IAdd<TEntity>
     {
         public Task<TEntity> AddAsync(TEntity entity);
     }
 
-    public interface IUpdate<TEntity> where TEntity : class, new()
+    public interface IUpdate<TEntity>
     {
         public Task<TEntity> UpdateAsync(TEntity entity);
     }
 
-    public interface IDelete<TEntity> where TEntity : class, new()
+    public interface IDelete<TEntity>
     {
         public Task<TEntity> DeleteAsync(TEntity entity);
     }
 
-    public interface IFilteredQuery<TEntity> where TEntity : class, new()
+    public interface IFilteredQuery<TEntity>
     {
         public IEnumerable<TEntity> QueryFiltered(Expression<Func<TEntity, bool>> filterExpression);
     }
 
-    public interface IPagedQuery<TEntity> where TEntity : class, new()
+    public interface IPagedQuery<TEntity>
     {
         public int PageCount(int pageSize);
         public IEnumerable<TEntity> QueryPaged(int pageNumber, int pageSize);
     }
 
-    public interface IFilteredPagedQuery<TEntity>: IFilteredQuery<TEntity>, IPagedQuery<TEntity> where TEntity : class, new()
+    public interface IFilteredPagedQuery<TEntity>: IFilteredQuery<TEntity>, IPagedQuery<TEntity>
     {
         public IEnumerable<TEntity> QueryFilteredPaged(Expression<Func<TEntity, bool>> filterExpression, int pageNumber, int pageSize);
     }
 
-    public interface ITourRepository: IAdd<Tour>, IDelete<Tour>, IUpdate<Tour>, IFilteredPagedQuery<Tour>, IFirstOrDefaultAsync<Tour, int>
+    public interface ITourRepository: IAdd<Tour>, IDelete<Tour>, IUpdate<Tour>, IFilteredPagedQuery<Tour>, IFindAsync<Tour, int>
     {
 
     }
@@ -59,7 +59,7 @@ namespace Core.Interfaces
 
     }
 
-    public interface IUserRepository : IAdd<User>, IDelete<User>, IUpdate<User>, IFilteredPagedQuery<User>
+    public interface ICustomerRepository : IFindAsync<Customer, string>, IAdd<Customer>, IDelete<Customer>, IUpdate<Customer>, IFilteredPagedQuery<Customer>
     {
 
     }
@@ -92,5 +92,9 @@ namespace Core.Interfaces
     public interface ILogRepository: IAdd<Log>, IFilteredPagedQuery<Log>
     {
 
+    }
+
+    public interface IPostRepository<TPost, TEmployee>: IFindAsync<TPost, int>, IAdd<TPost>, IUpdate<TPost>, IDelete<TPost>, IFilteredPagedQuery<TPost> where TEmployee: IEmployee where TPost: IPost<TEmployee>
+    { 
     }
 }
