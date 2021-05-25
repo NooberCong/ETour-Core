@@ -8,6 +8,6 @@ namespace Core.Entities
         public string Name { get; set; }
         public string Email { get; set; }
         public string ImgUrl { get; set; }
-        public ICollection<TourReview> Reviews { get; set; } = new List<TourReview>();
+        //public ICollection<TourReview> Reviews { get; set; } = new List<TourReview>();
     }
 }
