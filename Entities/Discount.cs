@@ -1,22 +1,44 @@
 ﻿using Core.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Core.Entities
 {
     public class Discount : EntityWithKey<int>
     {
+        [Required]
+        [StringLength(256, MinimumLength = 5)]
         public string Title { get; set; }
-        public string ValidUntil { get; set; }
+
+        [Required]
+        [DataType(DataType.DateTime)]
+        public DateTime ValidUntil { get; set; }
+
+        [Required]
+        [Range(0, double.MaxValue)]
         public decimal Value { get; set; }
         public DiscountType Type { get; set; } = DiscountType.Percentage;
-        public ICollection<Trip> TripsApplied { get; set; } = new List<Trip>();
+        public ICollection<TripDiscount> TripDiscounts { get; set; } = new List<TripDiscount>();
 
 
         public enum DiscountType
         {
             Percentage,
             Amount
+        }
+
+        public string GetValueSuffix()
+        {
+            switch (Type)
+            {
+                case DiscountType.Percentage:
+                    return "%";
+                case DiscountType.Amount:
+                    return "$";
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         public decimal Apply(decimal price)

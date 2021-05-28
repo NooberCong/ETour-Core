@@ -4,10 +4,9 @@ namespace Core.Entities
 {
     public class Booking : TrackedEntityWithKey<int>
     {
-        public Customer Booker { get; set; }
-        public string BookerID { get; set; }
         public Trip Trip { get; set; }
         public int TripID { get; set; }
+        public int Amount { get; set; }
         public string Note { get; set; }
         public BookingStatus Status { get; set; }
 

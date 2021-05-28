@@ -8,7 +8,12 @@ using System.Threading.Tasks;
 
 namespace Core.Interfaces
 {
-    public interface IFindAsync<TEntity, TKey> where TEntity: IEntityWithKey<TKey>
+    public interface IQuery<TEntity>
+    {
+        public IQueryable<TEntity> Queryable { get; }
+    }
+
+    public interface IFindAsync<TEntity, TKey> where TEntity : IEntityWithKey<TKey>
     {
         public Task<TEntity> FindAsync(TKey key);
     }
@@ -39,62 +44,68 @@ namespace Core.Interfaces
         public IEnumerable<TEntity> QueryPaged(int pageNumber, int pageSize);
     }
 
-    public interface IFilteredPagedQuery<TEntity>: IFilteredQuery<TEntity>, IPagedQuery<TEntity>
+    public interface IFilteredPagedQuery<TEntity> : IFilteredQuery<TEntity>, IPagedQuery<TEntity>
     {
         public IEnumerable<TEntity> QueryFilteredPaged(Expression<Func<TEntity, bool>> filterExpression, int pageNumber, int pageSize);
     }
 
-    public interface ITourRepository: IAdd<Tour>, IDelete<Tour>, IUpdate<Tour>, IFilteredPagedQuery<Tour>, IFindAsync<Tour, int>
+    public interface ITourRepository : IQuery<Tour>, IAdd<Tour>, IDelete<Tour>, IUpdate<Tour>, IFilteredPagedQuery<Tour>, IFindAsync<Tour, int>
     {
 
     }
 
-    public interface ITripRepository : IAdd<Trip>, IUpdate<Trip>, IFilteredQuery<Trip>
+    public interface ITripRepository : IQuery<Trip>, IFindAsync<Trip, int>, IAdd<Trip>, IUpdate<Trip>, IFilteredQuery<Trip>
     {
 
     }
 
-    public interface ITourReviewRepository : IAdd<TourReview>, IDelete<TourReview>, IFilteredPagedQuery<TourReview>
+    public interface ITourReviewRepository : IQuery<TourReview>, IAdd<TourReview>, IDelete<TourReview>, IFilteredPagedQuery<TourReview>
     {
 
     }
 
-    public interface ICustomerRepository : IFindAsync<Customer, string>, IAdd<Customer>, IDelete<Customer>, IUpdate<Customer>, IFilteredPagedQuery<Customer>
+    public interface ICustomerRepository : IQuery<Customer>, IFindAsync<Customer, string>, IAdd<Customer>, IDelete<Customer>, IUpdate<Customer>, IFilteredPagedQuery<Customer>
     {
 
     }
 
-    public interface IBookingRepository: IAdd<Booking>, IUpdate<Booking>, IFilteredPagedQuery<Booking>
+    public interface IBookingRepository : IQuery<Booking>, IAdd<Booking>, IUpdate<Booking>, IFilteredPagedQuery<Booking>
     {
 
     }
 
-    public interface IItineraryRepository: IAdd<Itinerary>, IUpdate<Itinerary>, IDelete<Itinerary>, IFilteredQuery<Itinerary>
+    public interface IItineraryRepository : IQuery<Itinerary>, IAdd<Itinerary>, IUpdate<Itinerary>, IDelete<Itinerary>, IFilteredQuery<Itinerary>
     {
 
     }
 
-    public interface IQuestionRepository: IAdd<Question>, IUpdate<Question>, IDelete<Question>, IFilteredPagedQuery<Question>
+    public interface IQuestionRepository : IQuery<Question>, IAdd<Question>, IUpdate<Question>, IDelete<Question>, IFilteredPagedQuery<Question>
     {
 
     }
 
-    public interface IAnswerRepository: IAdd<Answer>, IUpdate<Answer>, IDelete<Answer>, IFilteredQuery<Answer>
+    public interface IAnswerRepository : IQuery<Answer>, IAdd<Answer>, IUpdate<Answer>, IDelete<Answer>, IFilteredQuery<Answer>
     {
 
     }
 
-    public interface IDiscountRepository: IAdd<Discount>, IUpdate<Discount>, IDelete<Discount>, IFilteredPagedQuery<Discount>
+    public interface IDiscountRepository : IFindAsync<Discount, int>, IQuery<Discount>, IAdd<Discount>, IUpdate<Discount>, IDelete<Discount>, IFilteredPagedQuery<Discount>
     {
 
     }
 
-    public interface ILogRepository: IAdd<Log>, IFilteredPagedQuery<Log>
+    public interface ILogRepository : IQuery<Log>, IAdd<Log>, IFilteredPagedQuery<Log>
     {
 
     }
 
-    public interface IPostRepository<TPost, TEmployee>: IFindAsync<TPost, int>, IAdd<TPost>, IUpdate<TPost>, IDelete<TPost>, IFilteredPagedQuery<TPost> where TEmployee: IEmployee where TPost: IPost<TEmployee>
-    { 
+    public interface IPostRepository<TPost, TEmployee> : IQuery<TPost>, IFindAsync<TPost, int>, IAdd<TPost>, IUpdate<TPost>, IDelete<TPost>, IFilteredPagedQuery<TPost> where TEmployee : IEmployee where TPost : IPost<TEmployee>
+    {
+
+    }
+
+    public interface ITripDiscountRepository : IAdd<TripDiscount>, IDelete<TripDiscount>
+    {
+
     }
 }
