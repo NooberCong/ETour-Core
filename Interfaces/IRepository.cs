@@ -74,7 +74,7 @@ namespace Core.Interfaces
 
     }
 
-    public interface IItineraryRepository : IQuery<Itinerary>, IAdd<Itinerary>, IUpdate<Itinerary>, IDelete<Itinerary>, IFilteredQuery<Itinerary>
+    public interface IItineraryRepository : IQuery<Itinerary>, IFindAsync<Itinerary, int>, IAdd<Itinerary>, IUpdate<Itinerary>, IDelete<Itinerary>, IFilteredQuery<Itinerary>
     {
 
     }

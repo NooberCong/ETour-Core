@@ -2,12 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Core.Entities
 {
     public class Trip : EntityWithKey<int>
     {
-        private static readonly decimal _minPriceRatio = 0.9M;
+        private static readonly decimal _minPriceRatio = 0.8M;
 
         [Required]
         [Display(Name = "Start time")]
@@ -24,7 +25,7 @@ namespace Core.Entities
         public string Description { get; set; }
 
         [Required]
-        [Range(0, double.MaxValue)]
+        [Range(0, double.MaxValue, ErrorMessage = "The given price is not realistic")]
         public decimal Price { get; set; }
 
         [Required]
@@ -35,6 +36,7 @@ namespace Core.Entities
         public bool IsOpen { get; set; } = true;
         public ICollection<Itinerary> Itineraries { get; set; } = new List<Itinerary>();
         public ICollection<TripDiscount> TripDiscounts { get; set; } = new List<TripDiscount>();
+        public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
         public bool IsVisible(DateTime currentTime)
         {
@@ -48,14 +50,14 @@ namespace Core.Entities
 
         public decimal GetSalePrice()
         {
-            decimal discounted = Price;
-            foreach (var tripDisc in TripDiscounts)
+            decimal salePrice = Price;
+            foreach (var discount in TripDiscounts.Select(trd => trd.Discount).Where(d => !d.IsExpired(DateTime.Now)))
             {
-                discounted = tripDisc.Discount.Apply(discounted);
+                salePrice = discount.Apply(salePrice);
             }
             decimal minimumSalePrice = Price * _minPriceRatio;
 
-            return Math.Max(discounted, minimumSalePrice);
+            return Math.Max(salePrice, minimumSalePrice);
         }
     }
 }

@@ -6,7 +6,9 @@ namespace Core.Entities
     {
         public Trip Trip { get; set; }
         public int TripID { get; set; }
-        public int Amount { get; set; }
+        public Order Order { get; set; }
+        public int OrderID { get; set; }
+        public int Quantity { get; set; }
         public string Note { get; set; }
         public BookingStatus Status { get; set; }
 
@@ -19,10 +21,10 @@ namespace Core.Entities
             Canceled,
         }
 
-        //public decimal CalculatePrice()
-        //{
-        //    return 0;
-        //}
+        public decimal CalculatePrice()
+        {
+            return Trip.GetSalePrice() * Quantity;
+        }
 
         //public decimal CalculateCancelationPrice()
         //{

@@ -43,14 +43,14 @@ namespace Core.Entities
 
         public decimal Apply(decimal price)
         {
-            if (!IsValid(DateTime.Now))
+            if (IsExpired(DateTime.Now))
             {
-                throw new Exception("Attempting to apply invalid discount");
+                throw new Exception("Attempting to apply expired discount");
             }
             switch (Type)
             {
                 case DiscountType.Percentage:
-                    return price / 100 * Value;
+                    return price / 100 * (100 - Value);
                 case DiscountType.Amount:
                     return price - Value;
                 default:
@@ -58,19 +58,9 @@ namespace Core.Entities
             }
         }
 
-        public bool IsValid(DateTime currentTime)
+        public bool IsExpired(DateTime currentTime)
         {
-            // Invalid discount value
-            if (Value <= 0 || Type == DiscountType.Percentage && Value > 100)
-            {
-                return false;
-            }
-            // Discount ended
-            if (ValidUntil.CompareTo(currentTime) < 0)
-            {
-                return false;
-            }
-            return true;
+            return ValidUntil.CompareTo(currentTime) < 0;
         }
     }
 }
