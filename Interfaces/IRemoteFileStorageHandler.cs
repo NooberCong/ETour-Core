@@ -12,5 +12,7 @@ namespace Core.Interfaces
         public Task<string> UploadAsync(Stream fileStream, string mimeType);
 
         public Task DeleteAsync(string fileUri);
+
+        public bool IsHostedFile(string fileUrl);
     }
 }
