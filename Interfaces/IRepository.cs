@@ -46,6 +46,7 @@ namespace Core.Interfaces
 
     public interface IFilteredPagedQuery<TEntity> : IFilteredQuery<TEntity>, IPagedQuery<TEntity>
     {
+        public int PageCount(Expression<Func<TEntity, bool>> filterExpression, int pageSize);
         public IEnumerable<TEntity> QueryFilteredPaged(Expression<Func<TEntity, bool>> filterExpression, int pageNumber, int pageSize);
     }
 
@@ -54,7 +55,7 @@ namespace Core.Interfaces
 
     }
 
-    public interface ITripRepository : IQuery<Trip>, IFindAsync<Trip, int>, IAdd<Trip>, IUpdate<Trip>, IFilteredQuery<Trip>
+    public interface ITripRepository : IQuery<Trip>, IFindAsync<Trip, int>, IAdd<Trip>, IUpdate<Trip>, IFilteredPagedQuery<Trip>
     {
 
     }
@@ -64,7 +65,7 @@ namespace Core.Interfaces
 
     }
 
-    public interface ICustomerRepository : IQuery<Customer>, IFindAsync<Customer, string>, IAdd<Customer>, IDelete<Customer>, IUpdate<Customer>, IFilteredPagedQuery<Customer>
+    public interface ICustomerRepository : IQuery<Customer>, IFindAsync<Customer, string>, IAdd<Customer>, IDelete<Customer>, IUpdate<Customer>
     {
 
     }
