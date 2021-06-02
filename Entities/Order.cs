@@ -10,7 +10,7 @@ namespace Core.Entities
         public string CustomerID { get; set; }
         public bool IsPaid { get; set; }
         public decimal TotalPaid { get; set; }
-        public DateTime DateOrdered { get; set; }
+        public DateTime DatePaid { get; set; }
         public List<Booking> Bookings { get; set; }
     }
 }

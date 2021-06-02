@@ -33,5 +33,19 @@ namespace Core.Entities
             Domestic,
             International
         }
+
+        public void Open()
+        {
+            IsOpen = true;
+        }
+
+        public void Close()
+        {
+            IsOpen = false;
+            foreach (var trip in Trips)
+            {
+                trip.IsOpen = false;
+            }
+        }
     }
 }

@@ -34,6 +34,7 @@ namespace Core.Entities
         public int TourID { get; set; }
         public Tour Tour { get; set; }
         public bool IsOpen { get; set; } = true;
+        public int RewardPoints { get; set; }
         public ICollection<Itinerary> Itineraries { get; set; } = new List<Itinerary>();
         public ICollection<TripDiscount> TripDiscounts { get; set; } = new List<TripDiscount>();
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
@@ -51,13 +52,32 @@ namespace Core.Entities
         public decimal GetSalePrice()
         {
             decimal salePrice = Price;
-            foreach (var discount in TripDiscounts.Select(trd => trd.Discount).Where(d => !d.IsExpired(DateTime.Now)))
+            foreach (var discount in TripDiscounts.Select(trd => trd.Discount).Where(d => !d.IsValid(DateTime.Now)))
             {
                 salePrice = discount.Apply(salePrice);
             }
             decimal minimumSalePrice = Price * _minPriceRatio;
 
             return Math.Max(salePrice, minimumSalePrice);
+        }
+
+        public bool CanOpen()
+        {
+            return Tour.IsOpen;
+        }
+
+        public void Open()
+        {
+            if (!CanOpen())
+            {
+                throw new InvalidOperationException("Attempted to open a trip that belong to a closed tour");
+            }
+            IsOpen = true;
+        }
+
+        public void Close()
+        {
+            IsOpen = false;
         }
     }
 }

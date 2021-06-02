@@ -12,6 +12,12 @@ namespace Core.Entities
         public string Title { get; set; }
 
         [Required]
+        [Display(Name = "Valid from")]
+        [DataType(DataType.DateTime)]
+        public DateTime ValidFrom { get; set; }
+
+        [Required]
+        [Display(Name = "Valid until")]
         [DataType(DataType.DateTime)]
         public DateTime ValidUntil { get; set; }
 
@@ -30,37 +36,31 @@ namespace Core.Entities
 
         public string GetValueSuffix()
         {
-            switch (Type)
+            return Type switch
             {
-                case DiscountType.Percentage:
-                    return "%";
-                case DiscountType.Amount:
-                    return "$";
-                default:
-                    throw new NotImplementedException();
-            }
+                DiscountType.Percentage => "%",
+                DiscountType.Amount => "$",
+                _ => throw new NotImplementedException(),
+            };
         }
 
         public decimal Apply(decimal price)
         {
-            if (IsExpired(DateTime.Now))
+            if (IsValid(DateTime.Now))
             {
                 throw new Exception("Attempting to apply expired discount");
             }
-            switch (Type)
+            return Type switch
             {
-                case DiscountType.Percentage:
-                    return price / 100 * (100 - Value);
-                case DiscountType.Amount:
-                    return price - Value;
-                default:
-                    throw new NotImplementedException();
-            }
+                DiscountType.Percentage => price / 100 * (100 - Value),
+                DiscountType.Amount => price - Value,
+                _ => throw new NotImplementedException(),
+            };
         }
 
-        public bool IsExpired(DateTime currentTime)
+        public bool IsValid(DateTime currentTime)
         {
-            return ValidUntil.CompareTo(currentTime) < 0;
+            return ValidFrom.CompareTo(currentTime) >= 0 && ValidUntil.CompareTo(currentTime) < 0;
         }
     }
 }

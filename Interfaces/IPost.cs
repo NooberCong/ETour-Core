@@ -2,7 +2,7 @@
 
 namespace Core.Entities
 {
-    public interface IPost<TAuthor> : IEntityWithKey<int>, IDeleteEntity, ITrackedEntity, IAuthoredEntity<TAuthor> where TAuthor : IEmployee
+    public interface IPost<TAuthor> : IEntityWithKey<int>, IDeleteEntity, ITrackedEntity, IAuthoredEntity<TAuthor, string> where TAuthor : IEmployee
     {
         public string Title { get; set; }
         public string Content { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,14 +51,16 @@ namespace Core.Interfaces
         public IEnumerable<TEntity> QueryFilteredPaged(Expression<Func<TEntity, bool>> filterExpression, int pageNumber, int pageSize);
     }
 
-    public interface ITourRepository : IQuery<Tour>, IAdd<Tour>, IDelete<Tour>, IUpdate<Tour>, IFilteredPagedQuery<Tour>, IFindAsync<Tour, int>
+    public interface ITourRepository : IQuery<Tour>, IDelete<Tour>, IUpdate<Tour>, IFilteredPagedQuery<Tour>, IFindAsync<Tour, int>
     {
-
+        public Task<Tour> AddAsync(Tour tour, IFormFileCollection images);
+        public Task<Tour> UpdateAsync(Tour tour, IFormFileCollection images);
     }
 
-    public interface ITripRepository : IQuery<Trip>, IFindAsync<Trip, int>, IAdd<Trip>, IUpdate<Trip>, IFilteredPagedQuery<Trip>
+    public interface ITripRepository : IQuery<Trip>, IFindAsync<Trip, int>, IUpdate<Trip>, IFilteredPagedQuery<Trip>
     {
-
+        public Task<Trip> AddAsync(Trip trip, int[] discountIDs);
+        public Task<Trip> UpdateAsync(Trip trip, int[] discountIDs);
     }
 
     public interface ITourReviewRepository : IQuery<TourReview>, IAdd<TourReview>, IDelete<TourReview>, IFilteredPagedQuery<TourReview>
@@ -92,7 +95,7 @@ namespace Core.Interfaces
 
     public interface IDiscountRepository : IFindAsync<Discount, int>, IQuery<Discount>, IAdd<Discount>, IUpdate<Discount>, IDelete<Discount>, IFilteredPagedQuery<Discount>
     {
-
+        public void UpdateTripApplications(Discount discount, int[] tripIDs);
     }
 
     public interface ILogRepository : IQuery<Log>, IAdd<Log>, IFilteredPagedQuery<Log>
@@ -101,11 +104,6 @@ namespace Core.Interfaces
     }
 
     public interface IPostRepository<TPost, TEmployee> : IQuery<TPost>, IFindAsync<TPost, int>, IAdd<TPost>, IUpdate<TPost>, IDelete<TPost>, IFilteredPagedQuery<TPost> where TEmployee : IEmployee where TPost : IPost<TEmployee>
-    {
-
-    }
-
-    public interface ITripDiscountRepository : IAdd<TripDiscount>, IDelete<TripDiscount>
     {
 
     }

@@ -26,16 +26,26 @@ namespace Core.Interfaces
         public virtual bool IsDeleted { get; set; }
     }
 
-    public interface IAuthoredEntity<TAuthor>
+    public interface IAuthoredEntity<TAuthor, TAuthorKey> where TAuthor : IEntityWithKey<TAuthorKey>
     {
         public TAuthor Author { get; set; }
+        public TAuthorKey AuthorID { get; set; }
     }
 
-    public abstract class AuthoredTrackedDeleteEntityWithKey<TAuthor, TKey> : EntityWithKey<TKey>, IAuthoredEntity<TAuthor>, ITrackedEntity, IDeleteEntity
+    public abstract class AuthoredTrackedEntityWithKey<TAuthor, TKey, TAuthorKey> : IAuthoredEntity<TAuthor, TAuthorKey>, IEntityWithKey<TKey>, ITrackedEntity where TAuthor : IEntityWithKey<TAuthorKey>
+    {
+        public TAuthor Author { get; set; }
+        public TKey ID { get; set; }
+        public DateTime LastUpdated { get; set; }
+        public TAuthorKey AuthorID { get; set; }
+    }
+
+    public abstract class AuthoredTrackedDeleteEntityWithKey<TAuthor, TKey, TAuthorKey> : EntityWithKey<TKey>, IAuthoredEntity<TAuthor, TAuthorKey>, ITrackedEntity, IDeleteEntity where TAuthor : IEntityWithKey<TAuthorKey>
     {
         public virtual TAuthor Author { get; set; }
         public virtual DateTime LastUpdated { get; set; }
         public virtual bool IsDeleted { get; set; }
+        public TAuthorKey AuthorID { get; set; }
     }
 
     public interface ITrackedEntity
