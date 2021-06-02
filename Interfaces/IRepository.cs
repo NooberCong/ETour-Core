@@ -109,4 +109,9 @@ namespace Core.Interfaces
     {
 
     }
+
+    public interface IOrderRepository : IQuery<Order>, IFindAsync<Order, int>, IAdd<Order>, IUpdate<Order>, IPagedQuery<Order>
+    {
+
+    }
 }
