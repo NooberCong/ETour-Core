@@ -18,6 +18,7 @@ namespace Core.Entities
         [Required]
         [StringLength(256, MinimumLength = 5)]
         public string Destination { get; set; }
+
         [Required]
         [StringLength(1024, MinimumLength = 5)]
         public string Description { get; set; }

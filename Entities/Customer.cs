@@ -1,4 +1,5 @@
 ﻿using Core.Interfaces;
+using System;
 using System.Collections.Generic;
 
 namespace Core.Entities
@@ -9,6 +10,8 @@ namespace Core.Entities
         public string Email { get; set; }
         public string ImgUrl { get; set; }
         public int Points { get; set; }
+        public DateTime LastSignIn { get; set; }
+        public bool Banned { get; set; } = false;
         public ICollection<TourReview> Reviews { get; set; } = new List<TourReview>();
         public ICollection<TourFollowing> TourFollowings { get; set; }
     }

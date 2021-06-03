@@ -68,7 +68,12 @@ namespace Core.Interfaces
 
     }
 
-    public interface ICustomerRepository : IQuery<Customer>, IFindAsync<Customer, string>, IAdd<Customer>, IDelete<Customer>, IUpdate<Customer>
+    public interface ICustomerRepository : IQuery<Customer>, IFindAsync<Customer, string>, IAdd<Customer>, IDelete<Customer>, IUpdate<Customer>, IFilteredPagedQuery<Customer>
+    {
+
+    }
+
+    public interface IEmployeeRepository<TEmployee> : IQuery<TEmployee>, IFindAsync<TEmployee, string>, IUpdate<TEmployee>, IFilteredQuery<TEmployee> where TEmployee : IEmployee
     {
 
     }

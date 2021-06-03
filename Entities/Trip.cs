@@ -34,6 +34,9 @@ namespace Core.Entities
         public int TourID { get; set; }
         public Tour Tour { get; set; }
         public bool IsOpen { get; set; } = true;
+        [Required]
+        [Display(Name = "Reward Points")]
+        [Range(0, 50)]
         public int RewardPoints { get; set; }
         public ICollection<Itinerary> Itineraries { get; set; } = new List<Itinerary>();
         public ICollection<TripDiscount> TripDiscounts { get; set; } = new List<TripDiscount>();
