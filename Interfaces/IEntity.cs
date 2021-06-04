@@ -16,14 +16,14 @@ namespace Core.Interfaces
         public virtual TKey ID { get; set; }
     }
 
-    public interface IDeleteEntity
+    public interface ISoftDelete
     {
-        public bool IsDeleted { get; set; }
+        public bool IsSoftDeleted { get; set; }
     }
 
-    public abstract class DeleteEntityWithKey<TKey> : EntityWithKey<TKey>, IDeleteEntity
+    public abstract class SoftDeleteEntityWithKey<TKey> : EntityWithKey<TKey>, ISoftDelete
     {
-        public virtual bool IsDeleted { get; set; }
+        public virtual bool IsSoftDeleted { get; set; }
     }
 
     public interface IAuthoredEntity<TAuthor, TAuthorKey> where TAuthor : IEntityWithKey<TAuthorKey>
@@ -40,11 +40,11 @@ namespace Core.Interfaces
         public TAuthorKey AuthorID { get; set; }
     }
 
-    public abstract class AuthoredTrackedDeleteEntityWithKey<TAuthor, TKey, TAuthorKey> : EntityWithKey<TKey>, IAuthoredEntity<TAuthor, TAuthorKey>, ITrackedEntity, IDeleteEntity where TAuthor : IEntityWithKey<TAuthorKey>
+    public abstract class AuthoredTrackedDeleteEntityWithKey<TAuthor, TKey, TAuthorKey> : EntityWithKey<TKey>, IAuthoredEntity<TAuthor, TAuthorKey>, ITrackedEntity, ISoftDelete where TAuthor : IEntityWithKey<TAuthorKey>
     {
         public virtual TAuthor Author { get; set; }
         public virtual DateTime LastUpdated { get; set; }
-        public virtual bool IsDeleted { get; set; }
+        public virtual bool IsSoftDeleted { get; set; }
         public TAuthorKey AuthorID { get; set; }
     }
 

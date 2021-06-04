@@ -108,9 +108,10 @@ namespace Core.Interfaces
 
     }
 
-    public interface IPostRepository<TPost, TEmployee> : IQuery<TPost>, IFindAsync<TPost, int>, IAdd<TPost>, IUpdate<TPost>, IDelete<TPost>, IFilteredPagedQuery<TPost> where TEmployee : IEmployee where TPost : IPost<TEmployee>
+    public interface IPostRepository<TPost, TEmployee> : IQuery<TPost>, IFindAsync<TPost, int>, IFilteredPagedQuery<TPost> where TEmployee : IEmployee where TPost : IPost<TEmployee>
     {
-
+        public Task<TPost> AddAsync(TPost post, IFormFile coverImg);
+        public Task<TPost> UpdateAsync(TPost post, IFormFile coverImg);
     }
 
     public interface IOrderRepository : IQuery<Order>, IFindAsync<Order, int>, IAdd<Order>, IUpdate<Order>, IPagedQuery<Order>
