@@ -78,7 +78,7 @@ namespace Core.Interfaces
 
     }
 
-    public interface IBookingRepository : IQuery<Booking>, IAdd<Booking>, IUpdate<Booking>, IFilteredPagedQuery<Booking>
+    public interface IBookingRepository : IQuery<Booking>, IFindAsync<Booking, int>, IAdd<Booking>, IUpdate<Booking>, IDelete<Booking>, IFilteredPagedQuery<Booking>
     {
 
     }
