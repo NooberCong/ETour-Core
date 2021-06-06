@@ -75,10 +75,11 @@ namespace Core.Interfaces
 
     public interface IEmployeeRepository<TEmployee> : IQuery<TEmployee>, IFindAsync<TEmployee, string>, IUpdate<TEmployee>, IFilteredQuery<TEmployee> where TEmployee : IEmployee
     {
-
+        public IEnumerable<IRole> GetAllRoles();
+        public Task UpdateAsync(TEmployee employee, string[] roleIds);
     }
 
-    public interface IBookingRepository : IQuery<Booking>, IAdd<Booking>, IUpdate<Booking>, IFilteredPagedQuery<Booking>
+    public interface IBookingRepository : IQuery<Booking>, IFindAsync<Booking, int>, IDelete<Booking>, IAdd<Booking>, IUpdate<Booking>, IFilteredPagedQuery<Booking>
     {
 
     }

@@ -31,6 +31,10 @@ namespace Core.Entities
         [Required]
         [Range(1, 100)]
         public int Capacity { get; set; }
+
+        [Required]
+        [Range(0, 60)]
+        public float Deposit { get; set; }
         public int TourID { get; set; }
         public Tour Tour { get; set; }
         public bool IsOpen { get; set; } = true;
