@@ -114,9 +114,4 @@ namespace Core.Interfaces
         public Task<TPost> AddAsync(TPost post, IFormFile coverImg);
         public Task<TPost> UpdateAsync(TPost post, IFormFile coverImg);
     }
-
-    public interface IOrderRepository : IQuery<Order>, IFindAsync<Order, int>, IAdd<Order>, IUpdate<Order>, IPagedQuery<Order>
-    {
-
-    }
 }

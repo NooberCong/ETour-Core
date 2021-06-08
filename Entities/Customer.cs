@@ -12,7 +12,7 @@ namespace Core.Entities
         public int Points { get; set; }
         public DateTime LastSignIn { get; set; }
         public ICollection<TourReview> Reviews { get; set; } = new List<TourReview>();
-        public ICollection<Order> Orders { get; set; }
+        public ICollection<Booking> Bookings { get; set; }
         public ICollection<TourFollowing> TourFollowings { get; set; }
         public ICollection<PointLog> PointLogs { get; set; }
     }
