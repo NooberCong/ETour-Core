@@ -20,7 +20,8 @@ namespace Core.Entities
         {
             Adult,
             Youth,
-            Children
+            Children,
+            Baby
         }
     }
 }

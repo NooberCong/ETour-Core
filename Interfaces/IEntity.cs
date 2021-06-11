@@ -37,7 +37,8 @@ namespace Core.Interfaces
         public TAuthor Author { get; set; }
         public TKey ID { get; set; }
         public DateTime LastUpdated { get; set; }
-        public TAuthorKey AuthorID { get; set; }
+        [Required]
+        public virtual TAuthorKey AuthorID { get; set; }
     }
 
     public abstract class AuthoredTrackedDeleteEntityWithKey<TAuthor, TKey, TAuthorKey> : EntityWithKey<TKey>, IAuthoredEntity<TAuthor, TAuthorKey>, ITrackedEntity, ISoftDelete where TAuthor : IEntityWithKey<TAuthorKey>
@@ -45,7 +46,8 @@ namespace Core.Interfaces
         public virtual TAuthor Author { get; set; }
         public virtual DateTime LastUpdated { get; set; }
         public virtual bool IsSoftDeleted { get; set; }
-        public TAuthorKey AuthorID { get; set; }
+        [Required]
+        public virtual TAuthorKey AuthorID { get; set; }
     }
 
     public interface ITrackedEntity
