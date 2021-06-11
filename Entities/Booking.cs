@@ -35,7 +35,7 @@ namespace Core.Entities
         [DataType(DataType.DateTime)]
         public DateTime? PaymentDeadline { get; set; }
 
-        public ICollection<CustomerInfo> CustomerInfos { get; set; }
+        public ICollection<CustomerInfo> CustomerInfos { get; set; } = new List<CustomerInfo>();
 
         [NotMapped]
         public int Amount => CustomerInfos.Count;
