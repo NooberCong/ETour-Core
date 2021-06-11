@@ -46,7 +46,7 @@ namespace Core.Entities
 
         public decimal Apply(decimal price)
         {
-            if (IsValid(DateTime.Now))
+            if (IsExpired(DateTime.Now))
             {
                 throw new Exception("Attempting to apply expired discount");
             }
@@ -58,9 +58,9 @@ namespace Core.Entities
             };
         }
 
-        public bool IsValid(DateTime currentTime)
+        public bool IsExpired(DateTime currentTime)
         {
-            return ValidFrom.CompareTo(currentTime) >= 0 && ValidUntil.CompareTo(currentTime) < 0;
+            return ValidUntil.CompareTo(currentTime) <= 0;
         }
     }
 }

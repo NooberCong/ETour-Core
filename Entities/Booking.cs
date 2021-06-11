@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.Entities
 {
@@ -9,10 +10,6 @@ namespace Core.Entities
     {
         public Trip Trip { get; set; }
         public int TripID { get; set; }
-        public int OrderID { get; set; }
-
-        [Required]
-        public int Quantity { get; set; }
 
         [StringLength(512)]
         public string Note { get; set; }
@@ -40,12 +37,16 @@ namespace Core.Entities
 
         public ICollection<CustomerInfo> CustomerInfos { get; set; }
 
+        [NotMapped]
+        public int Amount => CustomerInfos.Count;
+
         public enum BookingStatus
         {
             AwaitingDeposit,
             Processing,
             AwaitingPayment,
-            Completed
+            Completed,
+            Canceled,
         }
 
         public enum BookingPaymentType

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace Core.Entities
@@ -21,10 +22,6 @@ namespace Core.Entities
         public DateTime EndTime { get; set; }
 
         [Required]
-        [StringLength(512, MinimumLength = 10)]
-        public string Description { get; set; }
-
-        [Required]
         [Range(0, double.MaxValue, ErrorMessage = "The given price is not realistic")]
         public decimal Price { get; set; }
 
@@ -42,6 +39,20 @@ namespace Core.Entities
         [Display(Name = "Reward Points")]
         [Range(0, 50)]
         public int RewardPoints { get; set; }
+
+        [NotMapped]
+        public int Vacancies
+        {
+            get
+            {
+                var bookingsCount = this.Bookings
+                    .Where(bk => bk.Status != Booking.BookingStatus.Canceled)
+                    .Select(bk => bk.Amount).Sum();
+
+                return Capacity - bookingsCount;
+            }
+        }
+
         public ICollection<Itinerary> Itineraries { get; set; } = new List<Itinerary>();
         public ICollection<TripDiscount> TripDiscounts { get; set; } = new List<TripDiscount>();
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
@@ -59,7 +70,7 @@ namespace Core.Entities
         public decimal GetSalePrice()
         {
             decimal salePrice = Price;
-            foreach (var discount in TripDiscounts.Select(trd => trd.Discount).Where(d => !d.IsValid(DateTime.Now)))
+            foreach (var discount in TripDiscounts.Select(trd => trd.Discount).Where(d => !d.IsExpired(DateTime.Now)))
             {
                 salePrice = discount.Apply(salePrice);
             }
