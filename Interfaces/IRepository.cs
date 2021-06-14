@@ -86,7 +86,7 @@ namespace Core.Interfaces
 
     public interface IItineraryRepository : IQuery<Itinerary>, IFindAsync<Itinerary, int>, IAdd<Itinerary>, IUpdate<Itinerary>, IDelete<Itinerary>, IFilteredQuery<Itinerary>
     {
-
+        public Task<Itinerary> CopyTo(int tripID, Itinerary sourceItinerary);
     }
 
     public interface IQuestionRepository : IQuery<Question>, IAdd<Question>, IUpdate<Question>, IDelete<Question>, IFilteredPagedQuery<Question>

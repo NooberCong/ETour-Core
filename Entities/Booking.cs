@@ -15,12 +15,13 @@ namespace Core.Entities
         public string Note { get; set; }
 
         [Range(0, double.PositiveInfinity, ErrorMessage = "Unrealistic monetary value")]
-        public decimal? Total { get; set; }
-
-        [Range(0, double.PositiveInfinity, ErrorMessage = "Unrealistic monetary value")]
-        public decimal? Deposited { get; set; }
+        public decimal Total { get; set; }
 
         public BookingStatus Status { get; set; }
+
+        [Required]
+        [Display(Name = "Most Valued Quality")]
+        public BookingMostValued MostValued { get; set; }
 
         public BookingPaymentType? DepositPaymentType { get; set; }
 
@@ -37,8 +38,32 @@ namespace Core.Entities
 
         public ICollection<CustomerInfo> CustomerInfos { get; set; } = new List<CustomerInfo>();
 
+        [Required]
+        [Display(Name = "Full Name")]
+        [StringLength(128, MinimumLength = 3)]
+        public string ContactName { get; set; }
+        [Required]
+        [EmailAddress]
+        [StringLength(128, MinimumLength = 3)]
+        [Display(Name = "Email Address")]
+        public string ContactEmail { get; set; }
+        [Display(Name = "Phone Number")]
+        [Required]
+        [Phone]
+        public string ContactPhone { get; set; }
+
+        [Display(Name = "Home Address")]
+        [StringLength(256, MinimumLength = 3)]
+        public string ContactAddress { get; set; }
+
         [NotMapped]
         public int Amount => CustomerInfos.Count;
+
+
+        public decimal GetDeposit()
+        {
+            return Total * (decimal)Trip.Deposit;
+        }
 
         public enum BookingStatus
         {
@@ -47,6 +72,14 @@ namespace Core.Entities
             AwaitingPayment,
             Completed,
             Canceled,
+        }
+
+        public enum BookingMostValued
+        {
+            Transportation,
+            Accomodation,
+            Activities,
+            Cuisine
         }
 
         public enum BookingPaymentType

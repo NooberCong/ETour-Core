@@ -97,5 +97,20 @@ namespace Core.Entities
         {
             IsOpen = false;
         }
+
+        public decimal GetSalePriceFor(CustomerInfo.CustomerAgeGroup ageGroup)
+        {
+            var ratio = ageGroup switch
+            {
+                CustomerInfo.CustomerAgeGroup.Adult => 1,
+                CustomerInfo.CustomerAgeGroup.Youth => .5,
+                CustomerInfo.CustomerAgeGroup.Children => 0,
+                CustomerInfo.CustomerAgeGroup.Baby => 0,
+                _ => throw new InvalidOperationException("No ratio known for age group"),
+            };
+
+            return GetSalePrice() * (decimal)ratio;
+        }
     }
 }
+

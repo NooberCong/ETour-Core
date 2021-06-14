@@ -14,5 +14,7 @@ namespace Core.Interfaces
         public Task DeleteAsync(string fileUri);
 
         public bool IsHostedFile(string fileUrl);
+
+        public Task<string> CopyAsync(string srcUrl);
     }
 }
