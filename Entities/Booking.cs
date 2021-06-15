@@ -23,10 +23,6 @@ namespace Core.Entities
         [Display(Name = "Most Valued Quality")]
         public BookingMostValued MostValued { get; set; }
 
-        public BookingPaymentType? DepositPaymentType { get; set; }
-
-        public BookingPaymentType? FullPaymentType { get; set; }
-
         [DataType(DataType.DateTime)]
         public DateTime? DateDeposited { get; set; }
 
@@ -62,7 +58,7 @@ namespace Core.Entities
 
         public decimal GetDeposit()
         {
-            return Total * (decimal)Trip.Deposit;
+            return Total * (decimal)Trip.Deposit / 100;
         }
 
         public enum BookingStatus
@@ -82,10 +78,11 @@ namespace Core.Entities
             Cuisine
         }
 
-        public enum BookingPaymentType
+        public enum BookingPaymentProvider
         {
-            Cash,
-            Credit_Card
+            Zalo_Pay,
+            MoMo,
+            Google_Pay
         }
     }
 }
