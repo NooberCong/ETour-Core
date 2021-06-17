@@ -71,11 +71,11 @@ namespace Core.Entities
         {
             return Status switch
             {
-                BookingStatus.AwaitingDeposit => new BookingStatus[] { BookingStatus.AwaitingDeposit, BookingStatus.Processing, BookingStatus.AwaitingPayment, BookingStatus.Canceled },
-                BookingStatus.Processing => new BookingStatus[] { BookingStatus.Processing, BookingStatus.AwaitingPayment, BookingStatus.Canceled },
-                BookingStatus.AwaitingPayment => new BookingStatus[] { BookingStatus.AwaitingPayment, BookingStatus.Completed, BookingStatus.Canceled },
-                BookingStatus.Completed => new BookingStatus[] { BookingStatus.Completed, BookingStatus.Canceled },
-                BookingStatus.Canceled => new BookingStatus[] { BookingStatus.Canceled },
+                BookingStatus.AwaitingDeposit => new BookingStatus[] { BookingStatus.Processing, BookingStatus.AwaitingPayment, BookingStatus.Canceled },
+                BookingStatus.Processing => new BookingStatus[] { BookingStatus.AwaitingPayment, BookingStatus.Canceled },
+                BookingStatus.AwaitingPayment => new BookingStatus[] { BookingStatus.Completed, BookingStatus.Canceled },
+                BookingStatus.Completed => new BookingStatus[] { BookingStatus.Canceled },
+                BookingStatus.Canceled => new BookingStatus[] { },
                 _ => throw new InvalidOperationException(),
             };
         }
