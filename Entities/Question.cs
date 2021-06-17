@@ -1,11 +1,16 @@
 ﻿using Core.Interfaces;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Core.Entities
 {
     public class Question : AuthoredTrackedEntityWithKey<Customer, int, string>
     {
+        [Required]
+        [StringLength(256, MinimumLength = 5)]
         public string Title { get; set; }
+        [Required]
+        [StringLength(1024, MinimumLength = 10)]
         public string Content { get; set; }
         public QuestionCategory Category { get; set; }
         public QuestionPriority Priority { get; set; }
@@ -30,9 +35,9 @@ namespace Core.Entities
 
         public enum QuestionStatus
         {
-            Pending,
-            Open,
-            Closed
+            Pending, // Mới hỏi nhân viên chưa trả lời
+            Open, // Nv trả lời rồi nhưng chưa đủ kết thúc
+            Closed // Đã giải đáp dc cho khách hàng
         }
     }
 }

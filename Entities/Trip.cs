@@ -30,7 +30,7 @@ namespace Core.Entities
         public int Capacity { get; set; }
 
         [Required]
-        [Range(0, 60)]
+        [Range(50, 90)]
         public float Deposit { get; set; }
         public int TourID { get; set; }
         public Tour Tour { get; set; }
@@ -45,9 +45,9 @@ namespace Core.Entities
         {
             get
             {
-                var bookingsCount = this.Bookings
+                var bookingsCount = Bookings
                     .Where(bk => bk.Status != Booking.BookingStatus.Canceled)
-                    .Select(bk => bk.Amount).Sum();
+                    .Select(bk => bk.TicketCount).Sum();
 
                 return Capacity - bookingsCount;
             }
@@ -104,12 +104,40 @@ namespace Core.Entities
             {
                 CustomerInfo.CustomerAgeGroup.Adult => 1,
                 CustomerInfo.CustomerAgeGroup.Youth => .5,
-                CustomerInfo.CustomerAgeGroup.Children => 0,
+                CustomerInfo.CustomerAgeGroup.Children => .3,
                 CustomerInfo.CustomerAgeGroup.Baby => 0,
                 _ => throw new InvalidOperationException("No ratio known for age group"),
             };
 
             return GetSalePrice() * (decimal)ratio;
+        }
+
+        public decimal[] GetSalePricesFor(IEnumerable<CustomerInfo.CustomerAgeGroup> ageGroups)
+        {
+            int freeBabies = ageGroups.Where(ag => ag == CustomerInfo.CustomerAgeGroup.Adult).Count();
+            var salePrices = new List<decimal>();
+
+            foreach (var ag in ageGroups)
+            {
+                if (ag == CustomerInfo.CustomerAgeGroup.Baby)
+                {
+                    if (freeBabies > 0)
+                    {
+                        freeBabies -= 1;
+                        salePrices.Add(GetSalePriceFor(CustomerInfo.CustomerAgeGroup.Baby));
+                    }
+                    else
+                    {
+                        salePrices.Add(GetSalePriceFor(CustomerInfo.CustomerAgeGroup.Children));
+                    }
+                }
+                else
+                {
+                    salePrices.Add(GetSalePriceFor(ag));
+                }
+            }
+
+            return salePrices.ToArray();
         }
     }
 }

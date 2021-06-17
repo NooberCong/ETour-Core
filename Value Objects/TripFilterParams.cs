@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Core.Value_Objects
 {
-    public class TripFilterParams
+    public record TripFilterParams
     {
         public string Keyword { get; set; }
         public int? TourID { get; set; }
