@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace Core.Value_Objects
     {
         public string Keyword { get; set; }
         public int? TourID { get; set; }
+        public Tour.TourType? TourType { get; set; }
         [DataType(DataType.Date)]
         public DateTime? Starts { get; set; }
         [DataType(DataType.Date)]
