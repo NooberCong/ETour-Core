@@ -9,6 +9,7 @@ namespace Core.Entities
 {
     public class Booking : AuthoredTrackedEntityWithKey<Customer, int, string>
     {
+        public static decimal MaxPointRatio = .8m;
         public Trip Trip { get; set; }
         public int TripID { get; set; }
 
@@ -56,24 +57,28 @@ namespace Core.Entities
         [Range(1, int.MaxValue)]
         public int TicketCount { get; set; }
 
+        public int? PointsApplied { get; set; }
+        public decimal? Refunded { get; set; }
 
-        public decimal GetDeposit()
+        public decimal? Deposit { get; set; }
+
+        public int GetApplicablePoints(int points)
         {
-            return Total * (decimal)Trip.Deposit / 100;
+            return Convert.ToInt32(Math.Floor(Math.Min(points, Total * MaxPointRatio)));
         }
 
         public decimal GetFinalPayment()
         {
-            return Total - GetDeposit();
+            return Total - Deposit.Value;
         }
 
         public IEnumerable<BookingStatus> GetPossibleNextStatuses()
         {
             return Status switch
             {
-                BookingStatus.AwaitingDeposit => new BookingStatus[] { BookingStatus.Processing, BookingStatus.AwaitingPayment, BookingStatus.Canceled },
-                BookingStatus.Processing => new BookingStatus[] { BookingStatus.AwaitingPayment, BookingStatus.Canceled },
-                BookingStatus.AwaitingPayment => new BookingStatus[] { BookingStatus.Completed, BookingStatus.Canceled },
+                BookingStatus.Awaiting_Deposit => new BookingStatus[] { BookingStatus.Processing, BookingStatus.Awaiting_Payment, BookingStatus.Canceled },
+                BookingStatus.Processing => new BookingStatus[] { BookingStatus.Awaiting_Payment, BookingStatus.Canceled },
+                BookingStatus.Awaiting_Payment => new BookingStatus[] { BookingStatus.Completed, BookingStatus.Canceled },
                 BookingStatus.Completed => new BookingStatus[] { BookingStatus.Canceled },
                 BookingStatus.Canceled => new BookingStatus[] { },
                 _ => throw new InvalidOperationException(),
@@ -86,15 +91,68 @@ namespace Core.Entities
             {
                 throw new InvalidOperationException("Invalid booking status change");
             }
-            if (Status == BookingStatus.AwaitingDeposit)
+            if (Status == BookingStatus.Awaiting_Deposit)
             {
                 DateDeposited = DateTime.Today;
                 PaymentDeadline = Trip.StartTime.AddDays(-5);
-            } else if (Status == BookingStatus.AwaitingPayment)
+            }
+            else if (Status == BookingStatus.Awaiting_Payment)
             {
                 DateCompleted = DateTime.Today;
             }
             Status = newStatus;
+        }
+
+        public BookingCancelInfo GetBookingCancelInfo(DateTime cancelDate)
+        {
+            decimal amountPaid = 0;
+            // Customer has paid the full amount
+            if (DateCompleted.HasValue)
+            {
+                amountPaid = Total;
+            }
+            // Customer has not paid full but paid deposit
+            else if (DateDeposited.HasValue)
+            {
+                amountPaid = Deposit.Value;
+            }
+            var daysEarly = (Trip.StartTime - cancelDate).TotalDays;
+            var ratioLost = CalculateCancelRatio(daysEarly);
+            var refund = Math.Max(0, amountPaid - Total * ratioLost);
+
+            return new BookingCancelInfo
+            {
+                BookingID = ID,
+                AmountLost = amountPaid - refund,
+                Refund = refund,
+                PointsLost = PointsApplied.Value,
+                DaysEarly = Convert.ToInt32(daysEarly),
+                Trip = Trip
+            };
+        }
+
+        private decimal CalculateCancelRatio(double daysEarly)
+        {
+            if (daysEarly >= 20)
+            {
+                return .3m;
+            } else if (daysEarly >= 15)
+            {
+                return .5m;
+            } else if (daysEarly >= 10)
+            {
+                return .7m;
+            } else if (daysEarly >= 5)
+            {
+                return .9m;
+            }
+
+            return 1;
+        }
+
+        public void SetDeposit(float ratio)
+        {
+            Deposit = Total * (decimal)ratio;
         }
 
         public int GetMemberCountByAgeGroup(CustomerInfo.CustomerAgeGroup ageGroup)
@@ -102,11 +160,29 @@ namespace Core.Entities
             return CustomerInfos.Where(ci => ci.AgeGroup == ageGroup).Count();
         }
 
+        public bool CanCancel(DateTime dateCancel)
+        {
+            return Status != BookingStatus.Canceled && Trip.StartTime >= dateCancel;
+        }
+
+        public void Cancel(DateTime dateCancel)
+        {
+            if (!CanCancel(dateCancel))
+            {
+                throw new InvalidOperationException("Attempting to cancel a uncancellable booking");
+            }
+
+            var cancelInfo = GetBookingCancelInfo(dateCancel);
+
+            Refunded = cancelInfo.Refund;
+            ChangeStatus(BookingStatus.Canceled);
+        }
+
         public enum BookingStatus
         {
-            AwaitingDeposit,
+            Awaiting_Deposit,
             Processing,
-            AwaitingPayment,
+            Awaiting_Payment,
             Completed,
             Canceled,
         }
@@ -124,6 +200,16 @@ namespace Core.Entities
             Zalo_Pay,
             MoMo,
             Google_Pay
+        }
+
+        public class BookingCancelInfo
+        {
+            public int BookingID { get; set; }
+            public decimal Refund { get; set; }
+            public int PointsLost { get; set; }
+            public decimal AmountLost { get; set; }
+            public int DaysEarly { get; set; }
+            public Trip Trip { get; set; }
         }
     }
 }

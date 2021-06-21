@@ -15,7 +15,8 @@ namespace Core.Entities
         public string ImgUrl { get; set; }
         public int Points { get; set; }
         public string Address { get; set; }
-        [DataType(DataType.DateTime)]
+
+        [DataType(DataType.Date)]
         public DateTime? DOB { get; set; }
         [Phone]
         public string PhoneNumber { get; set; }
@@ -24,5 +25,15 @@ namespace Core.Entities
         public ICollection<Booking> Bookings { get; set; }
         public ICollection<TourFollowing> TourFollowings { get; set; }
         public ICollection<PointLog> PointLogs { get; set; }
+
+        public void Reward(int points)
+        {
+            Points += points;
+        }
+
+        public void Consume(int points)
+        {
+            Points -= points;
+        }
     }
 }
