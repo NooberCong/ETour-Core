@@ -150,9 +150,9 @@ namespace Core.Entities
             return 1;
         }
 
-        public void SetDeposit(float ratio)
+        public void SetDeposit(float depositPercentage)
         {
-            Deposit = Total * (decimal)ratio;
+            Deposit = Total / 100 * (decimal)depositPercentage;
         }
 
         public int GetMemberCountByAgeGroup(CustomerInfo.CustomerAgeGroup ageGroup)

@@ -84,6 +84,11 @@ namespace Core.Entities
             return Tour.IsOpen;
         }
 
+        public bool CanBook(DateTime bookTime)
+        {
+            return IsOpen && StartTime.AddDays(-30) > bookTime && Vacancies > 0;
+        }
+
         public void Open()
         {
             if (!CanOpen())
