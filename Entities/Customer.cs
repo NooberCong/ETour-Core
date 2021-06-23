@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Core.Entities
 {
@@ -34,6 +35,11 @@ namespace Core.Entities
         public void Consume(int points)
         {
             Points -= points;
+        }
+
+        public bool IsFollowing(Tour tour)
+        {
+            return TourFollowings.Any(tf => tf.TourID == tour.ID);
         }
     }
 }
