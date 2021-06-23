@@ -10,7 +10,7 @@ namespace Core.Services
     {
         public IEnumerable<IPost<T>> GetRecommendations<T>(IEnumerable<IPost<T>> source, IPost<T> basePost) where T : IEmployee
         {
-            return source.Where(p => !p.IsSoftDeleted).OrderByDescending(p => GetSimilarPoints(p, basePost)).Take(5);
+            return source.Where(p => !p.IsSoftDeleted && p.ID != basePost.ID).OrderByDescending(p => GetSimilarPoints(p, basePost)).Take(5);
         }
 
         public double GetSimilarPoints<T>(IPost<T> source, IPost<T> other) where T: IEmployee
