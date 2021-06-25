@@ -2,7 +2,7 @@
 
 namespace Core.Entities
 {
-    public class PointLog : AuthoredTrackedEntityWithKey<Customer, int, string>
+    public class PointLog : OwnedTrackedEntityWithKey<Customer, int, string>
     {
         public int Amount { get; set; }
         public string Description { get; set; }

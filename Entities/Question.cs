@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Core.Entities
 {
-    public class Question : AuthoredTrackedEntityWithKey<Customer, int, string>
+    public class Question : OwnedTrackedEntityWithKey<Customer, int, string>
     {
         [Required]
         [StringLength(256, MinimumLength = 5)]
@@ -16,7 +16,7 @@ namespace Core.Entities
         public QuestionPriority Priority { get; set; }
         public QuestionStatus Status { get; set; }
 
-        public ICollection<Answer> Answers { get; set; }
+        public ICollection<Answer> Answers { get; set; } = new List<Answer>();
 
         public enum QuestionCategory
         {

@@ -2,14 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace Core.Entities
 {
-    public class Booking : AuthoredTrackedEntityWithKey<Customer, int, string>
+    public class Booking : OwnedTrackedEntityWithKey<Customer, int, string>
     {
-        public static decimal MaxPointRatio = .8m;
+        public static readonly decimal _maxPointRatio = .8m;
         public Trip Trip { get; set; }
         public int TripID { get; set; }
 
@@ -58,13 +57,13 @@ namespace Core.Entities
         public int TicketCount { get; set; }
 
         public int? PointsApplied { get; set; }
-        public decimal? Refunded { get; set; }
+        public int? Refunded { get; set; }
 
         public decimal? Deposit { get; set; }
 
         public int GetApplicablePoints(int points)
         {
-            return Convert.ToInt32(Math.Floor(Math.Min(points, Total * MaxPointRatio)));
+            return Convert.ToInt32(Math.Floor(Math.Min(points, Total * _maxPointRatio)));
         }
 
         public decimal GetFinalPayment()
@@ -80,8 +79,33 @@ namespace Core.Entities
                 BookingStatus.Processing => new BookingStatus[] { BookingStatus.Awaiting_Payment, BookingStatus.Canceled },
                 BookingStatus.Awaiting_Payment => new BookingStatus[] { BookingStatus.Completed, BookingStatus.Canceled },
                 BookingStatus.Completed => new BookingStatus[] { BookingStatus.Canceled },
-                BookingStatus.Canceled => new BookingStatus[] { },
+                BookingStatus.Canceled => Array.Empty<BookingStatus>(),
                 _ => throw new InvalidOperationException(),
+            };
+        }
+
+        public Invoice GenerateDepositInvoice(Invoice.PaymentMethod method)
+        {
+            return new Invoice { 
+                Amount = Deposit.Value,
+                BookingID = ID,
+                LastUpdated = DateDeposited.Value,
+                Method = method,
+                Type = Invoice.PaymentType.Deposit,
+                Note = $"(Generated) {Owner.Name} pays Deposit for Booking No.{ID} {Trip.Tour.Title}"
+            };
+        }
+
+        public Invoice GenerateFinalPaymentInvoice(Invoice.PaymentMethod method)
+        {
+            return new Invoice
+            {
+                Amount = GetFinalPayment(),
+                BookingID = ID,
+                LastUpdated = DateCompleted.Value,
+                Method = method,
+                Type = Invoice.PaymentType.Full_Payment,
+                Note = $"(Generated) {Owner.Name} pays Final Payment for Booking No.{ID} {Trip.Tour.Title}"
             };
         }
 
@@ -118,7 +142,7 @@ namespace Core.Entities
             }
             var daysEarly = (Trip.StartTime - cancelDate).TotalDays;
             var ratioLost = CalculateCancelRatio(daysEarly);
-            var refund = Math.Max(0, amountPaid - Total * ratioLost);
+            var refund = Convert.ToInt32(Math.Max(0, Math.Ceiling(amountPaid - Total * ratioLost)));
 
             return new BookingCancelInfo
             {
@@ -131,7 +155,7 @@ namespace Core.Entities
             };
         }
 
-        private decimal CalculateCancelRatio(double daysEarly)
+        private static decimal CalculateCancelRatio(double daysEarly)
         {
             if (daysEarly >= 20)
             {
@@ -195,17 +219,10 @@ namespace Core.Entities
             Cuisine
         }
 
-        public enum BookingPaymentProvider
-        {
-            Zalo_Pay,
-            MoMo,
-            Google_Pay
-        }
-
         public class BookingCancelInfo
         {
             public int BookingID { get; set; }
-            public decimal Refund { get; set; }
+            public int Refund { get; set; }
             public int PointsLost { get; set; }
             public decimal AmountLost { get; set; }
             public int DaysEarly { get; set; }

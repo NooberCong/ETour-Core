@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Core.Entities
 {
-    public interface IPost<TAuthor> : IEntityWithKey<int>, ISoftDelete, ITrackedEntity, IAuthoredEntity<TAuthor, string> where TAuthor : IEmployee
+    public interface IPost<TAuthor> : IEntityWithKey<int>, ISoftDelete, ITrackedEntity, IOwnedEntity<TAuthor, string> where TAuthor : IEmployee
     {
         public string Title { get; set; }
         public string Content { get; set; }

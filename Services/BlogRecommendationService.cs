@@ -18,7 +18,7 @@ namespace Core.Services
             double points = 0;
 
             // Same author
-            if (source.AuthorID == other.AuthorID)
+            if (source.OwnerID == other.OwnerID)
             {
                 points += 50;
             }

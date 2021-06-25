@@ -26,26 +26,26 @@ namespace Core.Interfaces
         public virtual bool IsSoftDeleted { get; set; }
     }
 
-    public interface IAuthoredEntity<TAuthor, TAuthorKey> where TAuthor : IEntityWithKey<TAuthorKey>
+    public interface IOwnedEntity<TOwner, TOwnerKey> where TOwner : IEntityWithKey<TOwnerKey>
     {
-        public TAuthor Author { get; set; }
-        public TAuthorKey AuthorID { get; set; }
+        public TOwner Owner { get; set; }
+        public TOwnerKey OwnerID { get; set; }
     }
 
-    public abstract class AuthoredTrackedEntityWithKey<TAuthor, TKey, TAuthorKey> : IAuthoredEntity<TAuthor, TAuthorKey>, IEntityWithKey<TKey>, ITrackedEntity where TAuthor : IEntityWithKey<TAuthorKey>
+    public abstract class OwnedTrackedEntityWithKey<TOwner, TKey, TOwnerKey> : IOwnedEntity<TOwner, TOwnerKey>, IEntityWithKey<TKey>, ITrackedEntity where TOwner : IEntityWithKey<TOwnerKey>
     {
-        public TAuthor Author { get; set; }
+        public TOwner Owner { get; set; }
         public TKey ID { get; set; }
         public DateTime LastUpdated { get; set; }
-        public virtual TAuthorKey AuthorID { get; set; }
+        public virtual TOwnerKey OwnerID { get; set; }
     }
 
-    public abstract class AuthoredTrackedDeleteEntityWithKey<TAuthor, TKey, TAuthorKey> : EntityWithKey<TKey>, IAuthoredEntity<TAuthor, TAuthorKey>, ITrackedEntity, ISoftDelete where TAuthor : IEntityWithKey<TAuthorKey>
+    public abstract class OwnedTrackedDeleteEntityWithKey<TOwner, TKey, TOwnerKey> : EntityWithKey<TKey>, IOwnedEntity<TOwner, TOwnerKey>, ITrackedEntity, ISoftDelete where TOwner : IEntityWithKey<TOwnerKey>
     {
-        public virtual TAuthor Author { get; set; }
+        public virtual TOwner Owner { get; set; }
         public virtual DateTime LastUpdated { get; set; }
         public virtual bool IsSoftDeleted { get; set; }
-        public virtual TAuthorKey AuthorID { get; set; }
+        public virtual TOwnerKey OwnerID { get; set; }
     }
 
     public interface ITrackedEntity

@@ -2,7 +2,7 @@
 
 namespace Core.Entities
 {
-    public class TourReview : AuthoredTrackedEntityWithKey<Customer, int, string>
+    public class TourReview : OwnedTrackedEntityWithKey<Customer, int, string>
     {
         public string Content { get; set; }
         public int Stars { get; set; }
