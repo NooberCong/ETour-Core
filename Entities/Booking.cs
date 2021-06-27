@@ -61,6 +61,8 @@ namespace Core.Entities
 
         public decimal? Deposit { get; set; }
 
+        public bool Reviewed { get; set; }
+
         public int GetApplicablePoints(int points)
         {
             return Convert.ToInt32(Math.Floor(Math.Min(points, Total * _maxPointRatio)));
@@ -155,6 +157,7 @@ namespace Core.Entities
             };
         }
 
+
         private static decimal CalculateCancelRatio(double daysEarly)
         {
             if (daysEarly >= 20)
@@ -200,6 +203,11 @@ namespace Core.Entities
 
             Refunded = cancelInfo.Refund;
             ChangeStatus(BookingStatus.Canceled);
+        }
+
+        public bool CanBeReviewed(DateTime dateReview)
+        {
+            return Status == Booking.BookingStatus.Completed && !CanCancel(dateReview) && !Reviewed;
         }
 
         public enum BookingStatus
