@@ -27,16 +27,6 @@ namespace Core.Entities
         public ICollection<TourFollowing> TourFollowings { get; set; }
         public ICollection<PointLog> PointLogs { get; set; }
 
-        public void Reward(int points)
-        {
-            Points += points;
-        }
-
-        public void Consume(int points)
-        {
-            Points -= points;
-        }
-
         public bool IsFollowing(Tour tour)
         {
             return TourFollowings.Any(tf => tf.TourID == tour.ID);

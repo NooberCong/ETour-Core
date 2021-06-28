@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace Core.Entities
@@ -62,6 +63,10 @@ namespace Core.Entities
         public decimal? Deposit { get; set; }
 
         public bool Reviewed { get; set; }
+
+        [NotMapped]
+
+        public List<PointLog> PointLogs { get; set; } = new();
 
         public int GetApplicablePoints(int points)
         {
@@ -208,6 +213,53 @@ namespace Core.Entities
         public bool CanBeReviewed(DateTime dateReview)
         {
             return Status == Booking.BookingStatus.Completed && !CanCancel(dateReview) && !Reviewed;
+        }
+
+        public void ChargePoints(Customer customer)
+        {
+            if (PointsApplied.HasValue)
+            {
+                customer.Points -= PointsApplied.Value;
+                PointLogs.Add(new PointLog { 
+                    OwnerID = customer.ID,
+                    LastUpdated = DateTime.Now,
+                    Amount = PointsApplied.Value,
+                    Trigger = $"Booking No.{ID}",
+                    Description = $"{PointsApplied.Value} points used to book"
+                });
+            }
+        }
+
+        public void RewardPoints(Customer customer)
+        {
+            if (Trip.RewardPoints > 0)
+            {
+                customer.Points += Trip.RewardPoints;
+                PointLogs.Add(new PointLog
+                {
+                    OwnerID = customer.ID,
+                    LastUpdated = DateTime.Now,
+                    Amount = Trip.RewardPoints,
+                    Trigger = $"Booking No.{ID}",
+                    Description = $"{Trip.RewardPoints} points rewarded on successful booking"
+                });
+            }
+        }
+
+        public void RefundPoints(Customer customer)
+        {
+            if (Refunded.HasValue)
+            {
+                customer.Points += Refunded.Value;
+                PointLogs.Add(new PointLog
+                {
+                    OwnerID = customer.ID,
+                    LastUpdated = DateTime.Now,
+                    Amount = Refunded.Value,
+                    Trigger = $"Booking No.{ID}",
+                    Description = $"{PointsApplied.Value} points refunded on cancelation"
+                });
+            }
         }
 
         public enum BookingStatus

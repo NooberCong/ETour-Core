@@ -60,6 +60,8 @@ namespace Core.Interfaces
     {
         public void Follow(Customer customer, Tour tour);
         public void UnFollow(Customer customer, Tour tour);
+        public void AddPointLog(PointLog pointLog);
+        public IEnumerable<PointLog> GetPointsLogs(Customer customer);
     }
 
     public interface IEmployeeRepository<TEmployee> : IQuery<TEmployee>, IFindAsync<TEmployee, string>, IUpdate<TEmployee>, IFilteredQuery<TEmployee> where TEmployee : IEmployee
