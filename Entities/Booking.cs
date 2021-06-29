@@ -217,13 +217,13 @@ namespace Core.Entities
 
         public void ChargePoints(Customer customer)
         {
-            if (PointsApplied.HasValue)
+            if (PointsApplied.HasValue && PointsApplied.Value > 0)
             {
                 customer.Points -= PointsApplied.Value;
                 PointLogs.Add(new PointLog { 
                     OwnerID = customer.ID,
                     LastUpdated = DateTime.Now,
-                    Amount = PointsApplied.Value,
+                    Amount = -PointsApplied.Value,
                     Trigger = $"Booking No.{ID}",
                     Description = $"{PointsApplied.Value} points used to book"
                 });
