@@ -248,7 +248,7 @@ namespace Core.Entities
 
         public void RefundPoints(Customer customer)
         {
-            if (Refunded.HasValue)
+            if (Refunded.HasValue && Refunded.Value > 0)
             {
                 customer.Points += Refunded.Value;
                 PointLogs.Add(new PointLog
