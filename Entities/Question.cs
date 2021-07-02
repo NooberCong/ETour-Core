@@ -12,7 +12,7 @@ namespace Core.Entities
         [Required]
         [StringLength(1024, MinimumLength = 10)]
         public string Content { get; set; }
-        public QuestionCategory Category { get; set; }
+        public QuestionCategory? Category { get; set; }
         public QuestionPriority Priority { get; set; }
         public QuestionStatus Status { get; set; }
 
