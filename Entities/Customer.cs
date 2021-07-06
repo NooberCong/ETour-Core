@@ -2,11 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace Core.Entities
 {
-    public class Customer : SoftDeleteEntityWithKey<string>
+    public class Customer : SoftDeleteEntityWithKey<string>, IOwnedEntity<Customer, string>
     {
         [Required]
         [StringLength(128, MinimumLength = 2)]
@@ -22,10 +23,13 @@ namespace Core.Entities
         [Phone]
         public string PhoneNumber { get; set; }
         public DateTime? LastSignIn { get; set; }
-        public ICollection<TourReview> Reviews { get; set; } = new List<TourReview>();
+        [NotMapped]
+        public List<TourReview> Reviews { get; set; } = new List<TourReview>();
         public ICollection<Booking> Bookings { get; set; }
         public ICollection<TourFollowing> TourFollowings { get; set; }
         public ICollection<PointLog> PointLogs { get; set; }
+        public Customer Owner { get; set; }
+        public string OwnerID { get; set; }
 
         public bool IsFollowing(Tour tour)
         {

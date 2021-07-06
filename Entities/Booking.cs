@@ -62,10 +62,9 @@ namespace Core.Entities
 
         public decimal? Deposit { get; set; }
 
-        public bool Reviewed { get; set; }
+        public TourReview Review { get; set; }
 
         [NotMapped]
-
         public List<PointLog> PointLogs { get; set; } = new();
 
         public int GetApplicablePoints(int points)
@@ -212,7 +211,7 @@ namespace Core.Entities
 
         public bool CanBeReviewed(DateTime dateReview)
         {
-            return Status == Booking.BookingStatus.Completed && !CanCancel(dateReview) && !Reviewed;
+            return Status == Booking.BookingStatus.Completed && !CanCancel(dateReview) && Review == null;
         }
 
         public void ChargePoints(Customer customer)

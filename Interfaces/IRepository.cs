@@ -51,9 +51,10 @@ namespace Core.Interfaces
         public Task<Trip> UpdateAsync(Trip trip, int[] discountIDs);
     }
 
-    public interface ITourReviewRepository : IQuery<TourReview>, IAdd<TourReview>, IDelete<TourReview>
+    public interface ITourReviewRepository : IQuery<TourReview>, IAdd<TourReview>
     {
-
+        public IEnumerable<TourReview> GetReviewsForTour(Tour tour);
+        public IEnumerable<TourReview> GetReviewsForCustomer(Customer customer);
     }
 
     public interface ICustomerRepository : IQuery<Customer>, IFindAsync<Customer, string>, IAdd<Customer>, IDelete<Customer>, IUpdate<Customer>
@@ -108,5 +109,6 @@ namespace Core.Interfaces
     {
         public Task<TPost> AddAsync(TPost post, IFormFile coverImg);
         public Task<TPost> UpdateAsync(TPost post, IFormFile coverImg);
+        public Task AddComment(Comment comment);
     }
 }

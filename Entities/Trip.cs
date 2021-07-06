@@ -56,6 +56,7 @@ namespace Core.Entities
         public ICollection<Itinerary> Itineraries { get; set; } = new List<Itinerary>();
         public ICollection<TripDiscount> TripDiscounts { get; set; } = new List<TripDiscount>();
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+        public string OwnerID { get; set; }
 
         public bool IsVisible(DateTime currentTime)
         {

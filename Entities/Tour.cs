@@ -27,7 +27,7 @@ namespace Core.Entities
         public TourType Type { get; set; } = TourType.Domestic;
         public List<string> ImageUrls { get; set; } = new List<string>();
         public ICollection<Trip> Trips { get; set; } = new List<Trip>();
-        public ICollection<TourReview> Reviews { get; set; } = new List<TourReview>();
+        public ICollection<TourFollowing> Followings { get; set; }
 
         public enum TourType
         {

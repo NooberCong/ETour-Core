@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace Core.Interfaces
@@ -19,8 +21,22 @@ namespace Core.Interfaces
         public DateTime StartWork { get; set; }
         [Phone]
         public string PhoneNumber { get; set; }
+        public ICollection<Trip> Trips { get; set; }
 
-        public void ValidateNewRoles(string[] roleIds);
-        public bool IsAdmin();
+        public void ValidateNewRoles(string[] roleIds)
+        {
+            var isAdmin = Roles.Any(r => r.ID == IRole.ADMIN_ID);
+
+            // Prevent overposting
+            if (!isAdmin && roleIds.Contains(IRole.ADMIN_ID) || isAdmin && !roleIds.Contains(IRole.ADMIN_ID))
+            {
+                throw new Exception("Invalid role assignment");
+            }
+        }
+
+        public bool IsAdmin()
+        {
+            return Roles.Any(r => r.ID == IRole.ADMIN_ID);
+        }
     }
 }
