@@ -13,6 +13,7 @@ namespace Core.Interfaces
         public string ComposeResetPassword(string name, string confirmUrl);
         public string ComposeBookingConfirmation(Booking booking);
         public string ComposeBookingCancelation(Booking booking);
+        public string ComposeTripPromotion(Trip trip, string detailUrl, string bookingUrl);
 
     }
 }

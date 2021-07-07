@@ -1,5 +1,6 @@
 ﻿using Core.Interfaces;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.Entities
 {
@@ -11,6 +12,9 @@ namespace Core.Entities
         public List<string> ImageUrls { get; set; }
         public List<string> Tags { get; set; }
         public PostCategory Category { get; set; }
+
+        [ForeignKey("PostID")]
+        public ICollection<Comment> Comments { get; set; }
 
         public enum PostCategory
         {
