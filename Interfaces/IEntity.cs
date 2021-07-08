@@ -29,6 +29,7 @@ namespace Core.Interfaces
     public interface IOwnedEntity<TOwner, TOwnerKey> where TOwner : IEntityWithKey<TOwnerKey>
     {
         public TOwner Owner { get; set; }
+        [Required]
         public TOwnerKey OwnerID { get; set; }
     }
 
