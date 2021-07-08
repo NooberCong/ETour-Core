@@ -1,6 +1,7 @@
 ﻿using Core.Interfaces;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.Entities
 {
@@ -22,6 +23,8 @@ namespace Core.Entities
         [Required]
         [StringLength(1024, MinimumLength = 5)]
         public string Description { get; set; }
+        [NotMapped]
+        public TourReviewSummary ReviewSummary { get; set; }
         public bool IsOpen { get; set; } = true;
         [Required]
         public TourType Type { get; set; } = TourType.Domestic;

@@ -13,6 +13,7 @@ namespace Core.Services
         {
             return trips.Where(trip => trip.CanBook(DateTime.Now)
             && (filterParams.TourID == null || trip.TourID == filterParams.TourID)
+            && (!filterParams.MinRating.HasValue || trip.Tour.ReviewSummary.AverageStars >= filterParams.MinRating)
             && (string.IsNullOrWhiteSpace(filterParams.Keyword) || Fuzz.PartialTokenSetRatio(trip.Tour.Title, filterParams.Keyword) >= 50 || Fuzz.PartialTokenSetRatio(trip.Tour.Description, filterParams.Keyword) >= 50)
             && (filterParams.TourType == null || trip.Tour.Type == filterParams.TourType)
             && (filterParams.Starts == null || trip.StartTime.Date == filterParams.Starts.Value.Date)
