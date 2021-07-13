@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Core.Entities
 {
-    public class Customer : SoftDeleteEntityWithKey<string>, IOwnedEntity<Customer, string>
+    public class Customer : SoftDeleteEntityWithKey<string>
     {
         [Required]
         [StringLength(128, MinimumLength = 2)]
@@ -28,8 +28,6 @@ namespace Core.Entities
         public ICollection<Booking> Bookings { get; set; }
         public ICollection<TourFollowing> TourFollowings { get; set; }
         public ICollection<PointLog> PointLogs { get; set; }
-        public Customer Owner { get; set; }
-        public string OwnerID { get; set; }
 
         public bool IsFollowing(Tour tour)
         {

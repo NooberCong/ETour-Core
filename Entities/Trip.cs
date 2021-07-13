@@ -30,7 +30,7 @@ namespace Core.Entities
         public int Capacity { get; set; }
 
         [Required]
-        [Range(50, 90)]
+        [Range(20, 80)]
         public float Deposit { get; set; }
         public int TourID { get; set; }
         public Tour Tour { get; set; }
