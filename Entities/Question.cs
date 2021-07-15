@@ -12,7 +12,7 @@ namespace Core.Entities
         [Required]
         [StringLength(1024, MinimumLength = 10)]
         public string Content { get; set; }
-        public QuestionCategory? Category { get; set; }
+        public QuestionCategory Category { get; set; }
         public QuestionPriority Priority { get; set; }
         public QuestionStatus Status { get; set; }
         public ICollection<Answer> Answers { get; set; } = new List<Answer>();
@@ -39,12 +39,12 @@ namespace Core.Entities
             Closed // Đã giải đáp dc cho khách hàng
         }
 
-        public void Hide()
+        public void Close()
         {
             Status = QuestionStatus.Closed;
         }
 
-        public void Show()
+        public void Open()
         {
             Status = QuestionStatus.Open;
         }

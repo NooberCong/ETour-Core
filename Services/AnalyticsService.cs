@@ -71,7 +71,7 @@ namespace Core.Services
 
         private (int startMonth, int startYear) GetStartMonthYear(int endMonth, int endYear)
         {
-            return (Math.Abs(endMonth - 12) + 1, endYear - (endMonth < 12 ? 1 : 0));
+            return ((endMonth + 1) % 12, endYear - (endMonth < 12 ? 1 : 0));
         }
 
         private void MonthlyStats(int startMonth, int startYear, int endMonth, int endYear, IQueryable<Booking> bookings, Action<IGrouping<int, Booking>> aggregator)

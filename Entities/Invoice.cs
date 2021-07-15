@@ -5,9 +5,9 @@ namespace Core.Entities
 {
     public class Invoice : TrackedEntityWithKey<int>
     {
-        [Range(0, double.MaxValue)]
         public Booking Booking { get; set; }
         public int BookingID { get; set; }
+        [Range(1, double.MaxValue, ErrorMessage = "Invalid monetary value")]
         public decimal Amount { get; set; }
         public PaymentType Type { get; set; }
         public PaymentMethod Method { get; set; }
