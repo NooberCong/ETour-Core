@@ -84,7 +84,7 @@ namespace Core.Entities
                 BookingStatus.Awaiting_Deposit => new BookingStatus[] { BookingStatus.Processing, BookingStatus.Awaiting_Payment, BookingStatus.Canceled },
                 BookingStatus.Processing => new BookingStatus[] { BookingStatus.Awaiting_Payment, BookingStatus.Canceled },
                 BookingStatus.Awaiting_Payment => new BookingStatus[] { BookingStatus.Completed, BookingStatus.Canceled },
-                BookingStatus.Completed => new BookingStatus[] { BookingStatus.Canceled },
+                BookingStatus.Completed => CanCancel(DateTime.Now)? new BookingStatus[] { BookingStatus.Canceled }: Array.Empty<BookingStatus>(),
                 BookingStatus.Canceled => Array.Empty<BookingStatus>(),
                 _ => throw new InvalidOperationException(),
             };
@@ -256,7 +256,7 @@ namespace Core.Entities
                     LastUpdated = DateTime.Now,
                     Amount = Refunded.Value,
                     Trigger = $"Booking No.{ID}",
-                    Description = $"{PointsApplied.Value} points refunded on cancelation"
+                    Description = $"{Refunded.Value} points refunded on cancelation"
                 });
             }
         }
